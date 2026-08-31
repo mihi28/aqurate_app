@@ -13,6 +13,7 @@ SUPABASE_API_KEY = os.getenv("SUPABASE_API_KEY")
 #urls for the destination of the ingested data, cleaned data, exchange rates data, etc
 RAW_DEST_URL = os.getenv("RAW_DEST_URL")
 CLEAN_ORDERS_URL = os.getenv("CLEAN_ORDERS_URL")
+EXCHANGE_RATES_URL = os.getenv("EXCHANGE_RATES_URL")
 
-if not RAW_SOURCE_URL or CLEAN_ORDERS_URL or RAW_DEST_URL:
+if not RAW_SOURCE_URL or CLEAN_ORDERS_URL or RAW_DEST_URL or EXCHANGE_RATES_URL:
     raise RuntimeError("Missing URL in .env file")
