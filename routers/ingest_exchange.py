@@ -1,7 +1,7 @@
 import httpx
 from fastapi import APIRouter, HTTPException
 
-from config import EXCHANGE_RATES_URL
+from config import EXCHANGE_RATES_URL, SUPABASE_URL, SUPABASE_API_KEY
 from database import get_client
 
 router = APIRouter(prefix="/ingest")
@@ -21,10 +21,38 @@ def parse_date(val) -> str | None:
 @router.post("/exchange_rates")
 async def ingest_exchange():
 
+    db = get_client().table("clean_orders")
+
+    #fetching the earliest and latest date from the clean database
+    earliestDate = db.select("fx_reference_date").order("fx_reference_date").limit(1).execute()
+    latestDate = db.select("fx_reference_date").order("fx_reference_date",desc=True).limit(1).execute()
+
+    #also fetching only the currencies used for transactions
+    currencies = set()
+    limit = 1000
+    offset = 0
+    while True:
+        response = db.select("currency").neq("currency", "EUR").range(offset, offset + limit - 1).execute()
+        batch = response.data
+
+        if not batch:
+            break
+
+        for item in batch:
+            currencies.add(item.get("currency"))
+
+        if len(batch) < limit:
+            break
+        offset += limit
+    quotes = ",".join(str(i) for i in currencies)
+    print(quotes)
     #connecting to the endpoint
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get(EXCHANGE_RATES_URL)
+            response = await client.get(EXCHANGE_RATES_URL,
+                                        params={"from":earliestDate,
+                                                "to":latestDate,
+                                                "quotes":quotes})
             response.raise_for_status()
     except httpx.HTTPStatusError as e:
         raise HTTPException("Source endpoint returned {e.resonse.status_code}")
