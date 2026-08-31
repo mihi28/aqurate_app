@@ -7,14 +7,12 @@ load_dotenv()
 RAW_SOURCE_URL = os.getenv("RAW_SOURCE_URL")
 RAW_SOURCE_API = os.getenv("RAW_SOURCE_API")
 
-#api key for the personal database
-SUPABASE_API_KEY = os.getenv("SUPABASE_API_KEY")
-
-#urls for the destination of the ingested data, cleaned data, exchange rates data, etc
-RAW_DEST_URL = os.getenv("RAW_DEST_URL")
-CLEAN_ORDERS_URL = os.getenv("CLEAN_ORDERS_URL")
 EXCHANGE_RATES_URL = os.getenv("EXCHANGE_RATES_URL") #source of the exchange rates
-EXCHANGE_DEST_URL = os.getenv("EXCHANGE_DEST_URL") #destination in the personal database
+
+#api url and key for the personal database
+SUPABASE_API_KEY = os.getenv("SUPABASE_API_KEY")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+
  
-if not RAW_SOURCE_URL or CLEAN_ORDERS_URL or RAW_DEST_URL or EXCHANGE_RATES_URL:
+if not (RAW_SOURCE_URL or SUPABASE_URL or EXCHANGE_RATES_URL):
     raise RuntimeError("Missing URL in .env file")

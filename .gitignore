@@ -1,2 +1,21 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# Environment Variables / Secrets
 .env
-venv
+
+# Databases
+*.db
+*.sqlite3
+
+# IDEs and Editors
+.vscode/
+.idea/
+.DS_Store

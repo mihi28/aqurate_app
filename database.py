@@ -1,16 +1,8 @@
 from supabase import create_client, Client
-from config import RAW_DEST_URL, SUPABASE_API_KEY, CLEAN_ORDERS_URL, EXCHANGE_DEST_URL
+from config import SUPABASE_URL, SUPABASE_API_KEY
 
 
-#helper functions that return a client for each of the tables in the database
-def raw_orders_client():
-    supabase: Client = create_client(RAW_DEST_URL, SUPABASE_API_KEY)
-    return Client
+#helper function that returns the supabase client
 
-def clean_orders_client():
-    supabase: Client = create_client(CLEAN_ORDERS_URL, SUPABASE_API_KEY)
-    return Client
-
-def exchange_rates_client():
-    supabase: Client = create_client(EXCHANGE_DEST_URL, SUPABASE_API_KEY)
-    return Client
+def get_client() -> Client:
+    return create_client(SUPABASE_URL, SUPABASE_API_KEY)

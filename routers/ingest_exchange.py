@@ -2,7 +2,7 @@ import httpx
 from fastapi import APIRouter, HTTPException
 
 from config import EXCHANGE_RATES_URL
-from database import exchange_rates_client
+from database import get_client
 
 router = APIRouter(prefix="/ingest")
 
@@ -23,8 +23,8 @@ async def ingest_exchange():
 
     #connecting to the endpoint
     try:
-        with httpx.AsyncClient() as client:
-            response = client.get(EXCHANGE_RATES_URL)
+        async with httpx.AsyncClient() as client:
+            response = await client.get(EXCHANGE_RATES_URL)
             response.raise_for_status()
     except httpx.HTTPStatusError as e:
         raise HTTPException("Source endpoint returned {e.resonse.status_code}")
@@ -59,7 +59,7 @@ async def ingest_exchange():
     #upserting the payload into the database
     try:
         result = (
-            exchange_rates_client.table("exchange_rates").upsert(payload).execute()
+            get_client().table("exchange_rates").upsert(payload).execute()
         )
     except Exception as e:
         raise Exception("DATABASE UPSERT FAILED")

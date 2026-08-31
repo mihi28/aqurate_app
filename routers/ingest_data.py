@@ -2,7 +2,7 @@ import httpx
 from fastapi import APIRouter, HTTPException
 
 from config import RAW_SOURCE_URL,RAW_SOURCE_API
-from database import raw_orders_client
+from database import get_client
 
 router = APIRouter(prefix="/ingest")
 
@@ -23,8 +23,8 @@ async def ingest_oders():
 
     #connecting to the endpoint
     try:
-        with httpx.AsyncClient() as client:
-            response = client.get(RAW_SOURCE_URL, RAW_SOURCE_API)
+        async with httpx.AsyncClient() as client:
+            response = await client.get(RAW_SOURCE_URL, RAW_SOURCE_API)
             response.raise_for_status()
     except httpx.HTTPStatusError as e:
         raise HTTPException("Source endpoint returned {e.resonse.status_code}: check the API key in .env")
@@ -65,7 +65,7 @@ async def ingest_oders():
     #upserting the payload into the database
     try:
         result = (
-            raw_orders_client.table("raw_orders_dest").upsert(payload).execute()
+            get_client().table("raw_orders_dest").upsert(payload).execute()
         )
     except Exception as e:
         raise Exception("DATABASE UPSERT FAILED")
