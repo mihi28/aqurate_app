@@ -2,7 +2,7 @@ import httpx
 from fastapi import APIRouter, HTTPException
 
 from config import EXCHANGE_RATES_URL
-from database import raw_orders_client
+from database import exchange_rates_client
 
 router = APIRouter(prefix="/ingest")
 
@@ -59,7 +59,7 @@ async def ingest_exchange():
     #upserting the payload into the database
     try:
         result = (
-            raw_orders_client.table("exchange_rates").upsert(payload).execute()
+            exchange_rates_client.table("exchange_rates").upsert(payload).execute()
         )
     except Exception as e:
         raise Exception("DATABASE UPSERT FAILED")
