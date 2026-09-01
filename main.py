@@ -10,5 +10,5 @@ app.include_router(ingest_data.router)
 app.include_router(ingest_exchange.router)
 app.include_router(clean_data.router)
 #app.include_router(country_breakdown.router)
-#app.include_router(eur_spent.router)
+app.include_router(eur_spent.router)
 
