@@ -71,9 +71,10 @@ async def clean_data():
             continue
 
         #removing rows where qty or price is 0 or negative
-        if row.get("qty") < 0 or row.get("qty") == 0 or row.get("qty") is None:
+        #also if the qty or price is too high
+        if row.get("qty") < 0 or row.get("qty") == 0 or row.get("qty") is None or row.get("qty") > 100:
             continue
-        if row.get("unit_price") < 0 or row.get("unit_price") == 0 or row.get("unit_price") is None:
+        if row.get("unit_price") < 0 or row.get("unit_price") == 0 or row.get("unit_price") is None or row.get("unit_price") > 300:
             continue
 
          #making sure all text fields are stripped from whitespaces
